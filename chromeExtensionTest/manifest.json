@@ -1,0 +1,62 @@
+{
+    "name": "意志が弱いなら環境を変えればいいじゃない。",
+    "version": "0.1",
+    "description": "自身にとって毒となるサイトを登録できます。そのサイトを訪れると怒られます。",
+    "permissions": [
+        "activeTab",
+        "declarativeContent",
+        "storage",
+        "tabs",
+        "alarms",
+        "notifications",
+        "*://*localhost*/*",
+        "https://twitter.com/oauth/*",
+        "https://api.twitter.com/*"
+    ],
+    "options_page": "options.html",
+    "background": {
+        "scripts": [            
+            "jquery.min.js",
+            "bower_components/jquery-ui/jquery-ui.min.js",
+            "background.js"
+        ],
+        "persistent": false
+    },
+    "page_action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "128": "images/icon.png"
+        }
+    },
+    "content_scripts": [{
+        "matches": [
+            "http://*/*",
+            "https://*/*"
+        ],
+        "js": [
+            "jquery.min.js",
+            "bower_components/jquery-ui/jquery-ui.min.js",
+            "content.js"
+        ],
+        "css": [
+            "bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css",
+            "dialog/dialog.css"
+        ]
+
+    }],
+    "icons": {
+        "128": "images/icon.png"
+    },
+    "content_security_policy": "script-src 'self' https://api.twitter.com/ https://stackpath.bootstrapcdn.com https://cdn.jsdelivr.net https://*.jquery.com https://platform.twitter.com ; object-src 'self'",
+    "externally_connectable": {
+        "matches": [
+            "https://oauth.io/*"
+        ]
+    },
+
+    "web_accessible_resources": [
+        "dialog/dialog.html"
+    ],
+
+    "manifest_version": 2
+}
