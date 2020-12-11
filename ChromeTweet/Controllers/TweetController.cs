@@ -35,8 +35,8 @@ namespace ChromeTweet.Controllers
 
         string ConsumerKey = "mClqsiOczR4NlgEA8GpVwMlIR";
         string ConsumerSecret = "CfTZV8QMt1d4ZdM4KfOHxQpDzQ1cCVLs6hth7a86CHBhOdOhXh";
-        string AccessToken = "1333500315526545408-cfvITCvT1KYYDTi9Zwr4tXfYcbySC6";
-        string AccessSecret = "O8gIscAMlyQJJQERRZTezxPIvqyJPQWYkgIbCkO5W8XuaX";
+        string AccessToken = "";
+        string AccessSecret = "";
 
         [HttpGet]
         public async Task<IActionResult>  Get(string userName,string siteName)
