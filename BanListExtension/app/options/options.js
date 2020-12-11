@@ -10,6 +10,12 @@ const getBtn = document.getElementById('getStrage');
 const titleTxt = document.getElementById('title');
 const urlTxt = document.getElementById('url');
 
+const authBtn = document.getElementById('authTwitter');
+const pinTxt = document.getElementById('pinCode');
+const pinBtn = document.getElementById('sendCode');
+const chkBtn = document.getElementById('checkAuth');
+
+
 //データ保存時
 document.addEventListener("DOMContentLoaded", function () {
     setBtn.addEventListener('click', () => {
@@ -114,3 +120,58 @@ const loadTable = function () {
 getBtn.addEventListener('click', () => { loadTable() });
 
 window.onload = loadTable();
+
+
+
+
+
+
+
+
+
+
+//認証ボタンクリック時
+document.addEventListener("DOMContentLoaded", function () {
+    authBtn.addEventListener('click', () => {
+
+        fetch("https://localhost:44368/api/Tweet/auth");
+    });
+}, false);
+
+
+//ピンコード送信ボタンクリック時
+document.addEventListener("DOMContentLoaded", function () {
+    pinBtn.addEventListener('click', () => {
+
+        fetch("https://localhost:44368/api/Tweet/auth2?pin=" + pinTxt.value)
+            .then(response => response.json())
+            .then(textBody => { console.log(textBody); return textBody;})
+            .then(textBody =>
+            {
+                chrome.storage.sync.set({ 'token': textBody  }, function () {
+                    alert('トークンをセットしました。');
+                })
+            })
+
+    });
+}, false);
+
+//ピンコード送信ボタンクリック時
+document.addEventListener("DOMContentLoaded", function () {
+    chkBtn.addEventListener('click', () => {
+
+        chrome.storage.sync.get('token', function (token) {
+            fetch("https://localhost:44368/api/Tweet/CheckAuth", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(token.token)
+            })
+                .then(response => response.text())
+                .then(response => alert('よっしゃ' + response))
+                .catch(ex => { alert('あかん' + ex) });
+
+    })
+    });
+}, false);

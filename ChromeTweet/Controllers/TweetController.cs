@@ -14,6 +14,14 @@ using static CoreTweet.OAuth;
 
 namespace ChromeTweet.Controllers
 {
+    public class AccKeys
+    {
+        public string AccessToken { get; set; }
+        public string AccessTokenSecret{ get; set; }
+    }
+
+
+
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class TweetController : ControllerBase
@@ -25,10 +33,10 @@ namespace ChromeTweet.Controllers
             _logger = logger;
         }
 
-        string ConsumerKey = "XXXX";
-        string ConsumerSecret = "XXXX";
-        string AccessToken = "XXXX";
-        string AccessSecret = "XXXX";
+        string ConsumerKey = "mClqsiOczR4NlgEA8GpVwMlIR";
+        string ConsumerSecret = "CfTZV8QMt1d4ZdM4KfOHxQpDzQ1cCVLs6hth7a86CHBhOdOhXh";
+        string AccessToken = "1333500315526545408-cfvITCvT1KYYDTi9Zwr4tXfYcbySC6";
+        string AccessSecret = "O8gIscAMlyQJJQERRZTezxPIvqyJPQWYkgIbCkO5W8XuaX";
 
         [HttpGet]
         public async Task<IActionResult>  Get(string userName,string siteName)
@@ -113,13 +121,48 @@ namespace ChromeTweet.Controllers
 
             Status status = await tokens.Statuses.UpdateAsync(new { status = DateTime.Now});
 
-                return Ok(tokens.ToString());
+                return Ok(GetAccessTokensKey(tokens));
             }
             catch(Exception e)
             {
                 return BadRequest(e);
             }
         }
+
+        [HttpPost]
+        public IActionResult CheckAuth([FromBody]AccKeys keys)
+        {
+            try
+            {
+                //AccKeys keys = (AccKeys)JsonConvert.DeserializeObject(fromBody); 
+                //認証
+               Tokens newTokens = Tokens.Create(ConsumerKey, ConsumerSecret, keys.AccessToken, keys.AccessTokenSecret);
+
+              UserResponse  ur = newTokens.Account.VerifyCredentials();
+                return Ok(ur.ScreenName);
+        
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+
+        }
+
+
+
+        //トークンから必要なものをJsonへ
+        private static string GetAccessTokensKey(Tokens tokens)
+        {
+            IDictionary<string, string> tokenMap = new Dictionary<string, string>();
+            tokenMap.Add("AccessToken", tokens.AccessToken);
+            tokenMap.Add("AccessTokenSecret", tokens.AccessTokenSecret);
+            string serializedTokenMap = JsonConvert.SerializeObject(tokenMap);
+
+            return serializedTokenMap;
+        }
+
+
     }
 
 
@@ -142,7 +185,7 @@ namespace ChromeTweet.Controllers
                 ? default(TObject)
                 : JsonConvert.DeserializeObject<TObject>(json);
         }
-    }
 
+    }
 
 }

@@ -9,9 +9,19 @@
 
 <body>
 
+    <button type="button" class="btn btn-primary" id='authTwitter'>ツイッターアカウント認証</button>
+    <input type="text" id="pinCode" />
+    <button type="button" class="btn btn-primary" id='sendCode'>コード送信</button>
+
+    <button type="button" class="btn btn-primary" id='checkAuth'>認証チェック</button>
+
+    <span id="isTwitterID">認証されていなし</span>
+
     <button type="button" class="btn btn-primary" id='setStrage'>データをstrageへセット</button>
     <button type="button" class="btn btn-primary" id='getStrage'>データをstrageからゲット</button>
     <span id='tableSpan'></span>
+
+
 </body>
 
 <script src="../options/options.js"></script>
