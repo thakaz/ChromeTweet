@@ -14,32 +14,33 @@ const authBtn = document.getElementById('authTwitter');
 const pinTxt = document.getElementById('pinCode');
 const pinBtn = document.getElementById('sendCode');
 const chkBtn = document.getElementById('checkAuth');
+const IDTxt = document.getElementById('isTwitterID');
 
 
 //データ保存時
 document.addEventListener("DOMContentLoaded", function () {
-    setBtn.addEventListener('click', () => {
-        var urls = [];
+  setBtn.addEventListener('click', () => {
+    var urls = [];
 
-        var mybody = document.getElementsByTagName("body")[0];
-        var mytable = mybody.getElementsByTagName("table")[0];
-        var mytablebody = mytable.getElementsByTagName("tbody")[0];
-        for (var i = 0; i < 10; i++) {
-            var row = document.getElementsByTagName("tr")[i + 1];
-            var titleCel = row.getElementsByTagName("td")[0];
-            var urlCel = row.getElementsByTagName("td")[1];
+    var mybody = document.getElementsByTagName("body")[0];
+    var mytable = mybody.getElementsByTagName("table")[0];
+    var mytablebody = mytable.getElementsByTagName("tbody")[0];
+    for (var i = 0; i < 10; i++) {
+      var row = document.getElementsByTagName("tr")[i + 1];
+      var titleCel = row.getElementsByTagName("td")[0];
+      var urlCel = row.getElementsByTagName("td")[1];
 
-            if (urls != null) {
-                urls.push({ title: titleCel.childNodes[0].nodeValue, url: urlCel.childNodes[0].nodeValue });
-            } else {
-                urls = { title: titleCel.childNodes[0].nodeValue, url: urlCel.childNodes[0].nodeValue };
-            }
-        }
+      if (urls != null) {
+        urls.push({ title: titleCel.childNodes[0].nodeValue, url: urlCel.childNodes[0].nodeValue });
+      } else {
+        urls = { title: titleCel.childNodes[0].nodeValue, url: urlCel.childNodes[0].nodeValue };
+      }
+    }
 
 
-        chrome.storage.sync.set({ 'urls': urls }, function () {
-        })
-    });
+    chrome.storage.sync.set({ 'urls': urls }, function () {
+    })
+  });
 }, false);
 
 
@@ -132,46 +133,54 @@ window.onload = loadTable();
 
 //認証ボタンクリック時
 document.addEventListener("DOMContentLoaded", function () {
-    authBtn.addEventListener('click', () => {
+  authBtn.addEventListener('click', () => {
 
-        fetch("https://localhost:44368/api/Tweet/auth");
-    });
+    fetch(targetPath + "ShowAuthWindow");
+  });
 }, false);
 
 
 //ピンコード送信ボタンクリック時
 document.addEventListener("DOMContentLoaded", function () {
-    pinBtn.addEventListener('click', () => {
+  pinBtn.addEventListener('click', () => {
 
-        fetch("https://localhost:44368/api/Tweet/auth2?pin=" + pinTxt.value)
-            .then(response => response.json())
-            .then(textBody => { console.log(textBody); return textBody;})
-            .then(textBody =>
-            {
-                chrome.storage.sync.set({ 'token': textBody  }, function () {
-                    alert('トークンをセットしました。');
-                })
-            })
+    fetch(targetPath + "AuthPinCode?pin=" + pinTxt.value)
+      .then(response => response.json())
+      .then(textBody => { console.log(textBody); return textBody; })
+      .then(textBody => {
+        chrome.storage.sync.set({ 'token': textBody }, function () {
+          alert('トークンをセットしました。');
+        })
+      })
 
-    });
+  });
 }, false);
 
 //ピンコード送信ボタンクリック時
 document.addEventListener("DOMContentLoaded", function () {
-    chkBtn.addEventListener('click', () => {
+  chkBtn.addEventListener('click', () => {
 
-        chrome.storage.sync.get('token', function (token) {
-            fetch("https://localhost:44368/api/Tweet/CheckAuth", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(token.token)
-            })
-                .then(response => response.text())
-                .then(response => alert('よっしゃ' + response))
-                .catch(ex => { alert('あかん' + ex) });
-
+    chrome.storage.sync.get('token', function (token) {
+      fetch(targetPath + "CheckAuth", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(token.token)
+      })
+        .then(response => {
+          console.log(response.status);
+          if (!response.ok) {
+            console.error("エラーレスポンス", response);
+          } else {
+            console.log("レスポンス", response);
+          }
+          return response.text();
+        })
+        .then(response => IDTxt.innerHTML = response)
+        .catch(ex => { alert('あかん' + ex) });
     })
-    });
+  });
 }, false);
+
+const editor = new EditorJS({ holder: 'editor'});

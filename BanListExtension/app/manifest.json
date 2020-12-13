@@ -11,7 +11,8 @@
     "notifications",
     "https://twitter.com/oauth/*",
     "https://api.twitter.com/*",
-    "http://localhost/*"
+    "http://localhost/*",
+    "https://cdn.jsdelivr.net/*"
   ],
   "options_ui": {
     "page": "options/options.html",
@@ -20,6 +21,7 @@
   },
   "background": {
     "scripts": [
+      "common.js",
       "lib/jquery.min.js",
       "lib/jquery-ui.min.js",
       "background/background.js"
@@ -39,6 +41,7 @@
         "https://*/*"
       ],
       "js": [
+        "common.js",
         "lib/jquery.min.js",
         "lib/jquery-ui.min.js",
         "contentScript/content.js"

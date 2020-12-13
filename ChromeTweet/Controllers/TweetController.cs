@@ -69,9 +69,9 @@ namespace ChromeTweet.Controllers
 
         }
 
-
+        //
         [HttpGet]
-        public async Task<IActionResult> Auth()
+        public async Task<IActionResult> ShowAuthWindow()
         {
             OAuthSession session = await OAuth.AuthorizeAsync(ConsumerKey, ConsumerSecret);
 
@@ -113,7 +113,7 @@ namespace ChromeTweet.Controllers
         }
 
 
-        public async Task<IActionResult> Auth2(string pin)
+        public async Task<IActionResult> AuthPinCode(string pin)
         {
             try { 
             OAuthSession session = HttpContext.Session.GetObject<OAuthSession>("key");
